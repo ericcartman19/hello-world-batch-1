@@ -55,9 +55,28 @@ public class JobConfiguration {
 	}
 	
 	@Bean
-	public Job holaMundo() {
-		return jobBuilderFactory.get("holaMundo")
-				.start(step3_withLambda())
+	public Step step4_withLamdaToo() {
+		return stepBuilderFactory.get("step4_withLamdaToo")
+				.tasklet( (stepContribution, chunkContext) -> {
+					System.out.println("Another step with Lamda too");
+					return RepeatStatus.FINISHED;
+				}).build();
+	}
+	
+//	@Bean
+//	public Job holaMundo() {
+//		return jobBuilderFactory.get("holaMundo")
+//				.start(step3_withLambda())
+//				.build();
+//	}
+	
+	@Bean
+	public Job transitionJobSimpleNext() {
+		return jobBuilderFactory.get("transitionJobSimpleNext")
+				.start(step1())
+				.next(step2_withInterfaceImplementation())
+				.next(step3_withLambda())
+				.next(step4_withLamdaToo())
 				.build();
 	}
 
