@@ -70,14 +70,26 @@ public class JobConfiguration {
 //				.build();
 //	}
 	
+//	@Bean
+//	public Job transitionJobSimpleNext() {
+//		return jobBuilderFactory.get("transitionJobSimpleNext")
+//				.start(step1())
+//				.next(step2_withInterfaceImplementation())
+//				.next(step3_withLambda())
+//				.next(step4_withLamdaToo())
+//				.build();
+//	}
+	
 	@Bean
-	public Job transitionJobSimpleNext() {
-		return jobBuilderFactory.get("transitionJobSimpleNext")
+	public Job transitionJobSimpleNextExplicit() {
+		return jobBuilderFactory.get("transitionJobSimpleNextExplicit")
 				.start(step1())
-				.next(step2_withInterfaceImplementation())
-				.next(step3_withLambda())
-				.next(step4_withLamdaToo())
+				.on("COMPLETED").to(step2_withInterfaceImplementation())
+				.from(step2_withInterfaceImplementation()).on("COMPLETED").to(step3_withLambda())
+				.from(step3_withLambda()).on("COMPLETED").to(step4_withLamdaToo())
+				.from(step4_withLamdaToo()).end()
 				.build();
+				
 	}
 
 }
