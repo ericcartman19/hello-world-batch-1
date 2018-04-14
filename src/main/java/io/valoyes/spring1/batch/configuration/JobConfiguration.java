@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.valoyes.spring1.batch.impl.HolaMundoTaskletImpl;
+
 @Configuration
 @EnableBatchProcessing
 public class JobConfiguration {
@@ -37,9 +39,25 @@ public class JobConfiguration {
 	}
 	
 	@Bean
+	public Step step2_withInterfaceImplementation() {
+		return stepBuilderFactory.get("step2_withInterfaceImplementation")
+				.tasklet(new HolaMundoTaskletImpl())
+				.build();
+	}
+	
+	@Bean
+	public Step step3_withLambda() {
+		return stepBuilderFactory.get("step3_withLambda")
+				.tasklet( (sc, cc) -> {
+					System.out.println("Haciendo un step con lamdas!!! Oh yeah babe ;) ");
+					return RepeatStatus.FINISHED;
+				} ).build();
+	}
+	
+	@Bean
 	public Job holaMundo() {
 		return jobBuilderFactory.get("holaMundo")
-				.start(step1())
+				.start(step3_withLambda())
 				.build();
 	}
 
